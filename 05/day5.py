@@ -3,7 +3,7 @@ from collections import deque
 import re
 
 
-def read_initial_configuration():
+def move_crates(pt_two: bool = False):
     with open('day5-input.txt') as f:
         lines = f.readlines()
 
@@ -40,11 +40,22 @@ def read_initial_configuration():
         n = re.findall("\d+", lines[idx])
         amount, src, dest = n[0], n[1], n[2]
         a = 0
-        while a < int(amount):
-            crate = stack_data[src].popleft()
-            stack_data[dest].appendleft(crate)
-            a += 1
-        idx += 1
+
+        stack = []
+
+        if not pt_two:
+            while a < int(amount):
+                crate = stack_data[src].popleft()
+                stack_data[dest].appendleft(crate)
+                a += 1
+            idx += 1
+        else:
+            while a < int(amount):
+                crate = stack_data[src].popleft()
+                stack.append(crate)
+                a += 1
+            idx += 1
+            stack_data[dest].extendleft(reversed(stack))
 
     # get the topmost crates as our answer
     crates = ''
@@ -54,7 +65,9 @@ def read_initial_configuration():
     return crates
 
 
-crates = read_initial_configuration()
+crates = move_crates()
 print(f"part 1 answer: {crates}")
 
-
+########## PART 2 ##########
+crates = move_crates(pt_two=True)
+print(f"part 2 answer: {crates}")
