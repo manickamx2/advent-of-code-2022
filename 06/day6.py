@@ -5,7 +5,8 @@ with open('day6-input.txt') as f:
 
 
 def find_packet_marker_start_position(packet):
-    window_size = 4
+    # window_size = 4  # part 1
+    window_size = 14   # part 2
     s = 0
     for r, c in enumerate(packet):
         if r < window_size:
