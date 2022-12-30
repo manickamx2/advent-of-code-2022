@@ -26,7 +26,7 @@ class FileSystemObject:
 
 
 # find directories <= 10000
-def find_directories_lte_10000(file_system_obj: FileSystemObject, result):
+def find_directories_lte_10000(file_system_obj: FileSystemObject, result: List):
     if file_system_obj.size <= 100000 and file_system_obj.children != []:
         result.append(file_system_obj)
 
@@ -35,9 +35,22 @@ def find_directories_lte_10000(file_system_obj: FileSystemObject, result):
             find_directories_lte_10000(c, result)
 
 
-def get_child(children: List, child):
+def find_deletable_directories(
+        file_system_obj: FileSystemObject,
+        space_needed: int,
+        result: List
+):
+    if file_system_obj.size >= space_needed and file_system_obj.children != []:
+        result.append(file_system_obj)
+
+    for c in file_system_obj.children:
+        if c not in result:
+            find_deletable_directories(c, space_needed, result)
+
+
+def get_child(children: List, child_name: str):
     for c in children:
-        if child == c.name:
+        if child_name == c.name:
             return c
 
     return None
@@ -112,6 +125,18 @@ total = 0
 for x in res:
     total += x.size
 print(f"part 1 total: {total}")
+
+########## PART 2 ##########
+unused = 70000000 - root.size
+needed = 30000000 - unused
+
+res = []
+find_deletable_directories(root, needed, res)
+smallest = res[0].size
+for x in res:
+    if x.size < smallest:
+        smallest = x.size
+print(f"part 2 answer: {smallest}")
 
 
 
