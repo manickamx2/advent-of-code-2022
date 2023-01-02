@@ -23,3 +23,14 @@ for i in range(20, 260, 40):
 
 # part 1
 print(f"Signal strength: {signal_strength}")
+
+# part 2
+for row in range(0, 6):
+    for col in range(0, 40):
+        cycle = (row * 40) + col + 1
+        coordinate = register[cycle]
+        if col >= coordinate - 1 and col <= coordinate + 1:
+            print('#', end=' ')
+        else:
+            print('.', end=' ')
+    print()
