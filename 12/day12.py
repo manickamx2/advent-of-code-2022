@@ -50,8 +50,16 @@ for row, line in enumerate(lines):
             print(f"End position 'E' coordinates: {row, col}")
             end = (row, col)
             value = 26
+        elif char == 'a':
+            starts.append((row, col))
+            value = 1
         else:
             value = ord(char) - ord('a') + 1
         heights[(row, col)] = value
 
-print(climb_hill(start, end, heights))
+# part 1
+print(f"Part 1 answer: {climb_hill(start, end, heights)}")
+
+# part 2
+print(f"Part 2 answer: {min(climb_hill(s, end, heights) for s in starts)}")
+
