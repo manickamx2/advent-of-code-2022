@@ -6,6 +6,23 @@ with open('day13-input.txt') as f:
     lines = f.readlines()
 
 
+def flatten(packet):
+    res = []
+    depth = -100
+
+    def loop(child_packet, depth):
+        for cp in child_packet:
+            if isinstance(cp, list):
+                if not cp:
+                    res.append(depth)
+                loop(cp, depth+1)
+            else:
+                res.append(cp)
+
+    loop(packet, depth)
+    return res
+
+
 def compare(a, b):
     if a < b:
         return True
@@ -58,3 +75,19 @@ for i in range(0, len(lines), 3):
 
 # part 1
 print(f"Part 1 answer: {total}")
+
+# part 2
+packets = []
+for line in lines:
+    if line != '\n':
+        packet = ast.literal_eval(line.strip())
+        packets.append(packet)
+packets.extend([[2], [6]])
+flattened_packets = []
+for p in packets:
+    flattened_packet = flatten(p)
+    flattened_packets.append(flattened_packet)
+
+flattened_packets.sort()
+packet_two, packet_six = (flattened_packets.index([2]) + 1), (flattened_packets.index([6]) + 1)
+print(f"Part 2 answer: {packet_two * packet_six}")
