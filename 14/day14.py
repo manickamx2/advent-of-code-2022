@@ -23,19 +23,16 @@ def print_grid(grid, y_max, x_max, x_min):
         print()
 
 
-def calculate_next_position(sand):
+def calculate_next_position(sand, bottom):
     # down, down-left, down-right
     gx, gy = sand
     directions = [(0, 1), (-1, 1), (1, 1)]
     for dx, dy in directions:
         x = gx + dx
         y = gy + dy
-        cell = grid.get((x, y), None)
+        cell = grid.get((x, y), Cell(x, y, 'air'))
 
-        if not cell:
-            # we have reached the void
-            return None, None
-        elif cell.type != 'rock' and cell.type != 'sand':
+        if cell.type != 'rock' and cell.type != 'sand' and y < bottom:
             # we can reach this position, return
             return x, y
 
@@ -108,17 +105,15 @@ while sand_can_fall:
     sand = source
     at_rest = False
     while not at_rest:
-        nx, ny = calculate_next_position(sand)
+        nx, ny = calculate_next_position(sand, y_max + 2)
 
-        if (nx, ny) == (None, None):
-            sand_can_fall = False
-            at_rest = True
-        elif (nx, ny) == sand:
-            # update the grid
-            grid[(nx, ny)].type = 'sand'
+        if (nx, ny) == sand:
+            grid.update({(nx, ny): Cell(nx, ny, 'sand')})
             grains_of_sand += 1
+            if ny == 0:
+                sand_can_fall = False
             at_rest = True
 
         sand = (nx, ny)
 
-print(f"Part 1 answer: {grains_of_sand}")
+print(f"Grains of sand: {grains_of_sand}")
